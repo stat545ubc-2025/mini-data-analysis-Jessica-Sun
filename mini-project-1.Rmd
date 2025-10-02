@@ -101,25 +101,52 @@ And that is exactly the first thing that you will do!
 
 ```{r}
 ### EXPLORE HERE ###
-# Make list of dataset names to cycle through.
-interested_data <- list(steam_games, flow_sample, vancouver_trees, apt_buildings)
-# Names of datasets in string form to print later. 
-name_strings <- list("steam_games", "flow_sample", "vancouver_trees", "apt_buildings")
 
-# Prints out the summary of attributes for each dataset. Can summarize more datasets in the future by adding to the interested_data and name_strings.
-n <- 1
-for (var in interested_data){
-  # Indicate which dataset is being summarized.
-  message("dataset = ", name_strings[n])
+# Indicate which dataset is being summarized.
+print("dataset = steam_games")
   
-  # Functions to find dataset attributes.
-  var %>%
-    # Summary of the number of rows & columns, and names of columns.
-    glimpse() %>%
-    # Type of data
-    class()
-  n <- n + 1
-}
+# Functions to find dataset attributes.
+steam_games %>%
+  # Summary of the number of rows & columns, and names of columns.
+  glimpse() %>%
+  # Type of data
+  class()
+```
+
+```{r}
+# Indicate which dataset is being summarized.
+print("dataset = flow_sample")
+  
+# Functions to find dataset attributes.
+flow_sample %>%
+  # Summary of the number of rows & columns, and names of columns.
+  glimpse() %>%
+  # Type of data
+  class()
+```
+
+```{r}
+# Indicate which dataset is being summarized.
+print("dataset = vancouver_trees")
+  
+# Functions to find dataset attributes.
+vancouver_trees %>%
+  # Summary of the number of rows & columns, and names of columns.
+  glimpse() %>%
+  # Type of data
+  class()
+```
+
+```{r}
+# Indicate which dataset is being summarized.
+print("dataset = apt_buildings")
+  
+# Functions to find dataset attributes.
+apt_buildings %>%
+  # Summary of the number of rows & columns, and names of columns.
+  glimpse() %>%
+  # Type of data
+  class()
 ```
 
 <!----------------------------------------------------------------------------->
@@ -136,7 +163,7 @@ I will choose the steam_games dataset. I like Steam and recognize some of the ga
 
 <!-------------------------- Start your work below ---------------------------->
 
-Does the community perception of how good a game is affect how much a game's price is discounted?
+Question: Does the community perception of how good a game is affect how much a game's price is discounted?
 
 <!----------------------------------------------------------------------------->
 
@@ -174,6 +201,182 @@ Make sure that you're using dplyr and ggplot2 rather than base R for this task. 
 **(4 points)** So far, you have chosen a dataset and gotten familiar with it through exploring the data. You have also brainstormed one research question that interested you (Task 1.4). Now it's time to pick 4 research questions that you would like to explore in Milestone 2! Write the 4 questions and any additional comments below.
 
 <!--- *****START HERE***** --->
+
+## Introduction
+
+This is an analysis of data surrounding games listed on the gaming platform Steam. I will be using R to determine the possible relationship between the reception of a game (the average rating given to it via reviews) and the amount its price was discounted. My hypothesis is that games that are poorly received, i.e: games that get negative reviews, will be discounted more.
+
+The analysis will use `tidyverse` packages. Mostly, the data manipulation will use `dplyr` functions. I will also be generating plots using `ggplot2`. The data set used, steam_games, comes from the `datateachr` library, found at <https://github.com/UBC-MDS/datateachr>.
+
+## Methodology
+
+To remove extraneous data that are unnecessary to the analysis, I will create a new tibble, `steam_data`, which excludes unnecessary columns. This will include the game's `id` and `name`, which helps to identify specifiic rows at a glance in the future if needed. It will also include the `all_reviews` column, as well as the game's `original_price` and `discounted_price` columns.
+
+I will determine the dollar amount that each game was discounted for by subtracting `discounted_price` from `original_price`, creating `discounted_dollar`. Next, I will determine by what percent the game was discounted for by dividing `discounted_dollar` by the game's `original_price`, creating `discounted_percent`.
+
+Third, I will extract the number of reviews and the average rating that a game has from the `all_reviews`. The data in `all_reviews` consists of a long string with information on the rating, number of reviews, and percentage of people giving the game a certain rating. I will use the `stringr` library's functions to extract the number of reviews, listed in parentheses, into `all_review_num`. This column is not used for this analysis, but can be used later to determine sample size bias.
+
+I will then replace the original `all_reviews` column with a column of shorter strings of the audience rating. These ratings, ranging from "Very Negative" to "Overwhelmingly Positive," are the first phrases in their original longer strings. They are separated from the rest of the string with a comma, which makes them easy to extract.
+
+Finally, I will rename the columns to be capitalized and more concise where needed. The final `steam_data` tibble has 8 columns, listing the aforementioned information. The code is shown below.
+
+```{r}
+# Use scales library to format number as a percent
+library(scales)
+# Use stringr to extract specific snippets from review data
+library(stringr)
+
+# Exercise #7: Make a new tibble for the game name and ID, original price, discounted price, and all reviews.
+steam_data <- steam_games %>%
+  select(id, name, all_reviews, original_price, discount_price) %>%
+  
+  # Exercise #2: Create new columns for data derived from prices and reviews.
+  
+  # New column for how many dollars each game was discounted for.
+  mutate(discount_dollar = original_price - discount_price) %>%
+  # New column for what percentage each game was discounted for.
+  mutate(discount_percent = as.numeric(discount_dollar / original_price * 100)) %>%
+  
+  # New columns for numbers of all reviews
+  mutate(all_review_num = as.numeric(gsub(",", "", 
+                                          str_extract(all_reviews, 
+                                                      "(?<=\\().*(?=\\))")))) %>%
+  
+  # New columns indicating just the average review rating
+  mutate(all_reviews = gsub(",.*$", "", all_reviews)) %>%
+  
+  # Change column names
+  rename("ID" = id, "Name" = name, "All Reviews" = all_reviews, 
+         "Original Price" = original_price, "Discount Price" = discount_price,
+         "Discount $" = discount_dollar, "Discount %" = discount_percent, 
+         "# All Reviews" = all_review_num)
+steam_data
+```
+
+## Missing Values
+
+Not every row of data has all the values needed for the analysis. For example, Warhammer: Chaosbane and Team Sonic Racing were never discounted. Meanwhile, Grand Theft Auto IV and Super Neptunia RPG never got an audience review rating. Before I continue with the analysis, I must determine the amount of data missing from each column. For the purpose of future analyses, I will determine this for both the original `steam_games` data set and the new `steam_data` data set.
+
+I created a new tibble, `missing_summary`, which counted how many `NA` values each column had and saved them into one row. Then I pivoted the tibble, so that one column listed the column names of the `steam_games` or `steam_data` tibble, and the other listed the number of `NA` values in each column.
+
+I created a bar chart using `ggplot2` to show the number of missing values per column, as shown below. Out of the nearly 41 thousand rows of data, about 26 thousand did not have discounts, and about 23 thousand didn't have sufficient reviews. This is over half the data set. In the next step, where only rows with both discounts and reviews will be taken, this will likely reduce the available data even further.
+
+```{r}
+# Exercise #3: Determine how many missing values there are per column.
+missing_summary <- steam_games %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  
+  #Pivot tibble to make two columns of variable names and # of NA's
+  pivot_longer(cols = colnames(steam_games), values_to = "NAs")
+
+# Create bar chart showing number of missing values per column.
+ggplot(missing_summary, aes(x = name, y = NAs)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  geom_text(size = 2.5, aes(label = NAs), nudge_y = 750) +
+  
+  # Format the axes
+  scale_y_continuous(labels = comma) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 3), 
+                   limits = missing_summary$name) +
+  theme(axis.text.x = element_text(size = 5)) +
+  labs(x = "Variable Name", y = "# of Missing Data") +
+  
+  # Add title
+  ggtitle("Amount of Missing Data for Each Variable from steam_games Dataset")
+```
+
+```{r}
+# Do the same as above but for the relevant data in steam_data
+missing_summary <- steam_data %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  
+  #Pivot tibble to make two columns of variable names and # of NA's
+  pivot_longer(cols = colnames(steam_data), values_to = "NAs")
+
+# Create bar chart showing number of missing values per column.
+ggplot(missing_summary, aes(x = name, y = NAs)) +
+  geom_bar(stat = "identity", width = 0.5) +
+  geom_text(size = 2.5, aes(label = NAs), nudge_y = 750) +
+  
+  # Format the axes
+  scale_y_continuous(labels = comma) +
+  scale_x_discrete(guide = guide_axis(n.dodge = 2), 
+                   limits = missing_summary$name) +
+  labs(x = "Variable Name", y = "# of Missing Data") +
+  
+  # Add title
+  ggtitle("Amount of Missing Data for Each Variable from steam_data Dataset")
+```
+
+## Histogram of Discounts
+
+To determine if there's a relationship between user reviews and the amount a game is discounted, I created a histogram of the percentage a game was discounted for. This required creating a new tibble, `hist_data`, which simply included the `Discount %` and `All Reviews` columns.
+
+First, the tibble was filtered for rows that had all the necessary information. This means any row with data missing in either column was filtered out. Moreover, many of the discounted prices were significantly higher than their original prices. While this is not impossible, the scope of this analysis is to look at discounts as in lower prices. All rows where the discount percentage is negative, meaning the discounted price is higher than the original price, were filtered out.
+
+Additionally, many games did not have sufficient reviews to come to a consensus about the rating of the game. Therefore, the tibble was filtered to only include review ratings that signal a positive, negative, or mixed rating. All of this significantly reduces the number of rows available for analysis - 1,434.
+
+As this is significantly smaller than the 40,833 rows that I started out with, it indicates that discounting games due to player reviews would likely be rare, if not completely uncorrelated. Previous data indicates that most games never get discounted in the first place. About a quarter of games never get popular enough to get enough reviews for an audience rating.
+
+The filtered data was plotted as a stacked histogram, where the layers were colored based on what rating the games received. The code to filter data and plot the histogram are shown below.
+
+```{r}
+# Exercise 4: Explore relationship between all reviews rating and % discounted
+# Filter out all rows with missing data for relevant variables
+hist_data <- steam_data %>%
+  select("Discount %", "All Reviews") %>%
+  na.omit() %>%
+  
+  # Discount means lower price. Filter out all negative discount values.
+  filter(`Discount %` >= 0) %>%
+  # Filter out review ratings that do not indicate positive/negative/mixed opinions
+  filter(str_detect(`All Reviews`, "Positive|Negative|Mixed")) %>%
+  # Order the review ratings from most negative to most positive
+  arrange(match(`All Reviews`, c("Very Negative", "Negative", "Mostly egative", 
+                                 "Mixed", "Mostly Positive", "Positive",
+                                 "Very Positive", "Overwhelmingly Positive")))
+hist_data
+
+# Create stacked histogram of discount percentages
+ggplot(hist_data, aes(x = `Discount %`, fill = `All Reviews`)) +
+  geom_histogram(binwidth = 5, position = "stack") + 
+  
+  # Format axes and title
+  labs(x = "Discounted Price as % of Original Price", y = "# of Games") +
+  ggtitle("Discount Percentages Applied to Games Based on Reviews")
+
+# Create individual histogram of discount percentages
+ggplot(hist_data, aes(x = `Discount %`, fill = `All Reviews`)) +
+  geom_histogram(binwidth = 5, position = "stack") +
+  facet_wrap(~`All Reviews`) +
+  
+  # Format axes and title
+  labs(x = "Discounted Price as % of Original Price", y = "# of Games") +
+  ggtitle("Discount Percentages Applied to Games Based on Reviews")
+```
+
+## Results
+
+The most common discount to apply to a game is 50%, regardless of reviews. Discounts are also commonly set at around 15%, 40%, 75%, and 90%. There is no apparent correlation between the audience perception of the game via reviews and the amount a game is discounted.
+
+Negatively and overwhelmingly positively rated games do not appear to be discounted as much. Perhaps this is because the games were so bad that it was decided no one would play it regardless of the price, or the games were so good it was decided everyone will still play it at full price.
+
+Meanwhile, middling games with ratings from mostly negative to very positive were discounted more often. This is perhaps because, as the reception seems to be more subjective, it was decided that people were more likely to give these games a chance if they were cheaper. It's also possible that most games tend to be middling, so the ones that get discounted tend to be middling as well.
+
+## Conclusion
+
+My hypothesis that negatively reviewed games are discounted by larger amounts was disproven. While there is a possible correlation between a game's review and whether it gets discounted at all, there is no apparent trend indicating that reviews affect *how much* a game is discounted.
+
+The plots generated in this analysis more likely reflects that average spread of reviews across all games: very few games are rated extremely positively or negatively, and most are middling in reception. The amount that a game was discounted for then represents this spread evenly.
+
+However, it was determined that a large amount of games received discounts that were greater than their original prices. This could be due to many external factors, but a potential future analysis could examine if this had any correlation to audience reviews.
+
+Additionally, the original `steam_games` data set contained other variables in the game, including language options, computer requirements, and genres, which could also inform the preferences of the gaming industry. Based on this, I came up with the following four research questions to inform future analyses.
+
+1.  Why are so many of the discounted game prices higher than the non-discounted prices?
+2.  How does the initial price of a game and its computer requirements affect its audience perception?
+3.  Have discounts applied to games affected how they are reviewed recently compared to overall?
+4.  What genre of games are the most popular to release and play over time?
 
 <!----------------------------->
 
