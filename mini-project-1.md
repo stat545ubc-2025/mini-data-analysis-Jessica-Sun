@@ -142,10 +142,12 @@ understand your data.
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: steam\_games  
-2: flow\_sample  
-3: vancouver\_trees  
-4: apt\_buildings
+1: steam\_games: I like playing games on Steam.  
+2: flow\_sample: I worked with hydrometric data from Environment Canada
+before on a co-op.  
+3: vancouver\_trees: I like trees.  
+4: apt\_buildings: Apartment buildings will have a wide range of
+variables to look at.
 
 <!----------------------------------------------------------------------------->
 

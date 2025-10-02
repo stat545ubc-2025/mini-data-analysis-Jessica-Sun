@@ -88,10 +88,10 @@ And that is exactly the first thing that you will do!
 
 <!-------------------------- Start your work below ---------------------------->
 
-1: steam_games\
-2: flow_sample\
-3: vancouver_trees\
-4: apt_buildings
+1: steam_games: I like playing games on Steam.\
+2: flow_sample: I worked with hydrometric data from Environment Canada before on a co-op.\
+3: vancouver_trees: I like trees.\
+4: apt_buildings: Apartment buildings will have a wide range of variables to look at.
 
 <!----------------------------------------------------------------------------->
 
