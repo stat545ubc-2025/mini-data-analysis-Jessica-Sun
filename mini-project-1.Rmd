@@ -1,8 +1,8 @@
 ---
 title: "Mini Data-Analysis Deliverable 1"
-output: html_document
+output: md_document
 author: Jessica Sun
-student_number: 69248748
+date: October 2, 2025
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
