@@ -1,6 +1,8 @@
 ---
 title: "Mini Data-Analysis Deliverable 1"
 output: html_document
+author: Jessica Sun
+student_number: 69248748
 ---
 
 # Welcome to your (maybe) first-ever data analysis project!
