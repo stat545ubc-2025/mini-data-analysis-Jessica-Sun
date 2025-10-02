@@ -222,7 +222,7 @@ I will then replace the original `all_reviews` column with a column of shorter s
 
 Finally, I will rename the columns to be capitalized and more concise where needed. The final `steam_data` tibble has 8 columns, listing the aforementioned information. The code is shown below.
 
-```{r}
+```{r Exercise_7_2}
 # Use scales library to format number as a percent
 library(scales)
 # Use stringr to extract specific snippets from review data
@@ -263,7 +263,7 @@ I created a new tibble, `missing_summary`, which counted how many `NA` values ea
 
 I created a bar chart using `ggplot2` to show the number of missing values per column, as shown below. Out of the nearly 41 thousand rows of data, about 26 thousand did not have discounts, and about 23 thousand didn't have sufficient reviews. This is over half the data set. In the next step, where only rows with both discounts and reviews will be taken, this will likely reduce the available data even further.
 
-```{r}
+```{r Exercise_3a}
 # Exercise #3: Determine how many missing values there are per column.
 missing_summary <- steam_games %>%
   summarise(across(everything(), ~ sum(is.na(.)))) %>%
@@ -287,7 +287,7 @@ ggplot(missing_summary, aes(x = name, y = NAs)) +
   ggtitle("Amount of Missing Data for Each Variable from steam_games Dataset")
 ```
 
-```{r}
+```{r Exercise_3b}
 # Do the same as above but for the relevant data in steam_data
 missing_summary <- steam_data %>%
   summarise(across(everything(), ~ sum(is.na(.)))) %>%
@@ -322,7 +322,7 @@ As this is significantly smaller than the 40,833 rows that I started out with, i
 
 The filtered data was plotted as a stacked histogram, where the layers were colored based on what rating the games received. The code to filter data and plot the histogram are shown below.
 
-```{r}
+```{r Exercise_4}
 # Exercise 4: Explore relationship between all reviews rating and % discounted
 # Filter out all rows with missing data for relevant variables
 hist_data <- steam_data %>%

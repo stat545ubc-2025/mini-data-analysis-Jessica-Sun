@@ -579,7 +579,7 @@ taken, this will likely reduce the available data even further.
       # Add title
       ggtitle("Amount of Missing Data for Each Variable from steam_games Dataset")
 
-![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-7-1.png)
+![](mini-project-1_files/figure-markdown_strict/Exercise_3a-1.png)
 
     # Do the same as above but for the relevant data in steam_data
     missing_summary <- steam_data %>%
@@ -602,7 +602,7 @@ taken, this will likely reduce the available data even further.
       # Add title
       ggtitle("Amount of Missing Data for Each Variable from steam_data Dataset")
 
-![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-8-1.png)
+![](mini-project-1_files/figure-markdown_strict/Exercise_3b-1.png)
 
 ## Histogram of Discounts
 
@@ -676,7 +676,7 @@ data and plot the histogram are shown below.
       labs(x = "Discounted Price as % of Original Price", y = "# of Games") +
       ggtitle("Discount Percentages Applied to Games Based on Reviews")
 
-![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-9-1.png)
+![](mini-project-1_files/figure-markdown_strict/Exercise_4-1.png)
 
     # Create individual histogram of discount percentages
     ggplot(hist_data, aes(x = `Discount %`, fill = `All Reviews`)) +
@@ -687,7 +687,7 @@ data and plot the histogram are shown below.
       labs(x = "Discounted Price as % of Original Price", y = "# of Games") +
       ggtitle("Discount Percentages Applied to Games Based on Reviews")
 
-![](mini-project-1_files/figure-markdown_strict/unnamed-chunk-9-2.png)
+![](mini-project-1_files/figure-markdown_strict/Exercise_4-2.png)
 
 ## Results
 
