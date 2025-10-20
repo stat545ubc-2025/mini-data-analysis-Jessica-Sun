@@ -72,6 +72,8 @@ Begin by loading your data and the tidyverse package below:
     library(tidyverse)
     library(stringr)
     library(forcats)
+    library(broom)
+    library(here)
 
 # Task 1: Process and summarize your data
 
@@ -155,27 +157,30 @@ for!
 
 <!------------------------- Start your work below ----------------------------->
 
-    # steam_games tibble for reference
-    steam_games
+#### Research Question 1: Why are so many of the discounted game prices higher than the non-discounted prices?
 
-    ## # A tibble: 40,833 × 21
-    ##       id url    types name  desc_snippet recent_reviews all_reviews release_date
-    ##    <dbl> <chr>  <chr> <chr> <chr>        <chr>          <chr>       <chr>       
-    ##  1     1 https… app   DOOM  Now include… Very Positive… Very Posit… May 12, 2016
-    ##  2     2 https… app   PLAY… PLAYERUNKNO… Mixed,(6,214)… Mixed,(836… Dec 21, 2017
-    ##  3     3 https… app   BATT… Take comman… Mixed,(166),-… Mostly Pos… Apr 24, 2018
-    ##  4     4 https… app   DayZ  The post-so… Mixed,(932),-… Mixed,(167… Dec 13, 2018
-    ##  5     5 https… app   EVE … EVE Online … Mixed,(287),-… Mostly Pos… May 6, 2003 
-    ##  6     6 https… bund… Gran… Grand Theft… NaN            NaN         NaN         
-    ##  7     7 https… app   Devi… The ultimat… Very Positive… Very Posit… Mar 7, 2019 
-    ##  8     8 https… app   Huma… Human: Fall… Very Positive… Very Posit… Jul 22, 2016
-    ##  9     9 https… app   They… They Are Bi… Very Positive… Very Posit… Dec 12, 2017
-    ## 10    10 https… app   Warh… In a world … <NA>           Mixed,(904… May 31, 2019
-    ## # ℹ 40,823 more rows
-    ## # ℹ 13 more variables: developer <chr>, publisher <chr>, popular_tags <chr>,
-    ## #   game_details <chr>, languages <chr>, achievements <dbl>, genre <chr>,
-    ## #   game_description <chr>, mature_content <chr>, minimum_requirements <chr>,
-    ## #   recommended_requirements <chr>, original_price <dbl>, discount_price <dbl>
+There’s no extraneous data available on how the discounted prices were
+calculated. However, determining how much and how often discounts were
+applied on games over time can help to hypothesize reasons.
+
+To this end, the release years of games were extracted from the
+`release_date` column of `steam_games`. Next, the dollar amount of how
+much each game was discounted for was calculated from the
+`original_price` and `discount_price` columns. To adjust the discounts
+to amounts comparable to each other, the percentage discounted was taken
+instead. This was calculated by dividing the discounted dollar amount by
+the game’s original price. As was discovered in the previous mini data
+analysis, many games had “discounts” of prices several times higher than
+its original price.
+
+To analyze the distributions of negative discounts over time, all the
+positive discount values were filtered out, as they are irrelevant. For
+each year, summary statistics were calculated for the discount percents
+including maximum, minimum, mean, median, and the 25% and 75% quartiles.
+Aside from the mean, all of these summary statistics were used to create
+box plots of the range of negative discounts in each year.
+
+The code for this analysis is shown below:
 
     # Research Question 1: Why are so many of the discounted game prices higher than the non-discounted prices?
 
@@ -239,6 +244,72 @@ for!
 
 ![](mini-project-2_files/figure-markdown_strict/Research_Q_1-1.png)
 
+The data spanned from 1985 to 2025. As games that didn’t have negative
+discount values were filtered out, only about 11.6 thousand out of 40.8
+thousand were counted. The data showed discounts ranging from nearly 0%
+to less than -10,000%, with more than 75% of applicable games in each
+year having a negative discount of less than -100%. This would mean the
+discounted prices were more than twice the original price.
+
+The majority of discounts were above -1,000%, with a few being
+significantly lower than that. Plotted normally, it would show long
+tails on the box plots, with the other summary statistics clustered too
+close to each other to determine any information. To show the range in
+magnitude of the discounts, I plotted the y-axis as logarithmic.
+
+The plot shows that aside from the late 80’s and early 90’s, games that
+had negative discounts tended to have similar ranges of discount
+percentages. In the past decade, some games were given discount prices
+closer to 0% of the original, meaning their prices were raised by a
+small amount. The prices could have been increased due to the games
+being popular enough to justify pricing it more.
+
+However, a significant minority of games were given discounted prices
+that were so high, no one would have wanted to buy them. For example,
+many Call of Duty games were originally priced at $14.99, but had
+discounted prices of $962.60 - a “discount” of -6321%. Cases like these
+are likely a listing error, especially as the same discounted price was
+applied to about 20 Call of Duty games. Other similarly discounted games
+showed the same phenomenon, lending credence to the idea that these high
+prices were listing errors.
+
+#### Research Question 2: How does the initial price of a game and its computer requirements affect its audience perception?
+
+I decided to plot the hardware requirements and original price of games
+against their audience perception. The audience perception of a game
+would be determined from its reviews. Disregarding the number of reviews
+a game has, only the first section of the `all_reviews` column was
+extracted. The new `all_reviews` column only included the
+positive/mixed/negative overall rating.
+
+Hardware requirements of games were extremely varied, and I am not an
+expert in what makes a good gaming setup. However, by browsing through
+the `recommended_requirements` column, I found nine categories that most
+requirement lists had. They were all listed in a single string per row
+in the `recommended_requirements` column, and were separated by “`:,`”
+Using this pattern, I made a loop to separate out information labelled
+as follows: `"Recommended"`, `"OS"`, `"Processor"`, `"Memory"`,
+`"Graphics"`, `"Storage"`, `"DirectX"`, `"Network",` and `"Sound Card"`.
+
+Instead of plotting each separate requirement category, I instead
+tallied, for each game, how many categories recommended what I
+considered the most advanced software listed in the data set. These
+included a 64-bit processor, Windows 7, an Intel Core i7 processor, 16
+GB of memory, a NVIDIA GeForce graphics card, 100 GB of required
+storage, the Version 11 DirectX system, broadband internet connection,
+and a DirectX sound card.
+
+Each game was tallied for how many high computer requirements was
+recommended. Three or fewer of these requirements was considered low,
+four to six was considered medium, and seven or more was considered
+high.
+
+To plot all this, a ggplot with two layers was created. A bar graph was
+generated to show how many games had low to high computer requirements
+for each review category. On a separate y-axis, a series of box plots
+were created to show the range of prices these games had. The code for
+all this is shown below:
+
     # Research Question 2: How does the initial price of a game and its computer requirements affect its audience perception?
 
     # Create tibble of relevant data
@@ -281,8 +352,8 @@ for!
 
     # Define high requirements for a game as the most recent version of hardware. 
     # Make a list of keywords to search for in each category.
-    high_reqs <- list("64-bit processor", "Windows 7", "i7", "16 GB", "GeForce", "GB",
-                      "Version 11", "Broadband", "DirectX")
+    high_reqs <- list("64-bit processor", "Windows 7", "i7", "16 GB", "GeForce", 
+                      "100 GB", "Version 11", "Broadband", "DirectX")
 
     q2_data <- mutate(q2_data, "# Requirements" = 0)
 
@@ -303,8 +374,7 @@ for!
                                      ifelse(`# Requirements` <= 6, 
                                             "Medium", "High"))) %>%
       mutate("Requirements" = fct_reorder(`Requirements`, `# Requirements`, mean)) %>%
-      group_by(`Requirements`) %>%
-      select(name, all_reviews, Requirements, `# Requirements`, original_price)
+      group_by(`Requirements`)
 
     # Exercise 8: Create a graph that has at least two geom layers.
     q2_graph <- ggplot(q2_data, aes(x = all_reviews, fill = Requirements)) +
@@ -329,6 +399,51 @@ for!
     q2_graph
 
 ![](mini-project-2_files/figure-markdown_strict/Research_Q_2-1.png)
+
+As shown in the plot, the majority of games had low computer
+requirements, with only a small minority requiring advanced hardware in
+all categories. In fact, no games that were rated as overwhelmingly
+positive, positive, or any kind of negative had high computer
+requirements. Additionally, most games were priced at under a hundred
+dollars, with a few games ranging from very positive to mostly negative
+being priced at up to $600.
+
+There doesn’t seem to be any significant relationship between the
+computer requirements and original price of a game to how well it is
+received by an audience. At most, based on the box plots, one can point
+out that games needing more hardware requirements are more expensive.
+This makes sense, as games like this would have required more work to
+make. Additionally, within the 9.5 thousand games that have reviews, a
+price, and requirements, there are significantly fewer games labeled as
+negative compared to positive.
+
+#### Research Question 3: Have discounts applied to games affected how they are reviewed recently compared to overall?
+
+To better compare the games’ discounts to each other, I plotted the
+percentage a game was discounted compared to its original price. This
+was calculated in the same way as for Research Question 1. However, all
+games with negative discounts were filtered out, as the prices were
+potentially erroneous, as determined for Research Question 1.
+Additionally, I extracted both the recent and overall review rating of
+each game in the same way as for Research Question 2. I then filtered
+out all games that didn’t have information in any of these fields.
+
+For both `recent_reviews` and `all_reviews`, I assigned a score from 1
+to 9 to each rating, with 1 being assigned to “Overwhelmingly Positive”
+and 9 assigned to “Overwhelmingly Negative.” I subtracted the recent
+score from the overall score. If perception on a game recently became
+worse, then the score would decrease. If it became better, then the
+score would increase. My theory was that games with higher discounts
+would have more positive score changes.
+
+I calculated the same summary statistics for game discounts as in
+Research Question 1, and grouped them by their overall audience review
+categories. I plotted this a a box plot. However, I discovered that,
+regardless of discounts, the recent and overall audience reviews were
+the same for every game. To show this, I plotted a scatter plot of the
+change in score, which was zero for every category.
+
+The code for all this is shown below:
 
     # Research Question 3: Have discounts applied to games affected how they are reviewed recently compared to overall?
 
@@ -368,7 +483,7 @@ for!
                                   "Overwhelmingly Negative" = 9)) %>%
       
       # Determine change in audience perception
-      mutate(rating_change = all_rating - recent_rating) %>%
+      mutate(rating_change = recent_rating - all_rating) %>%
       
       # Summary of discounts
       group_by(all_reviews) %>%
@@ -393,12 +508,43 @@ for!
       ) +
       
       # Labels
-      ggtitle("Games Discounts Compared to Overall Reviews") +
+      ggtitle("Games Discounts Compared to Overall Reviews",
+              subtitle = "Boxplot: Range of Discounts; Scatterplot: Average Change in Reviews.") +
       xlab("Overall Reviews")
 
     q3_graph
 
 ![](mini-project-2_files/figure-markdown_strict/Research_Q_3-1.png)
+
+The box plot layer of the plot summarizes similar information to the
+histograms created in the first data analysis project. Games that are
+rated as overwhelmingly positive have lower discounts on average than
+more negatively rated games. Other than that, the most surprising
+discovery was that discounts had no effect on the overall audience
+perception of a game.
+
+#### Research Question 4: What genre of games are the most popular to release and play over time?
+
+To answer this question, only the `release_date` and `genre` columns
+from `steam_data` are needed. This data set has games released over a
+more than 40-year period, from the 1980s to 2025. Because of the wide
+range of time, and also because some of the dates are not consistently
+formatted, the data will only be plotted by year.
+
+The year value was extracted from `release_date`, with oddly formatted
+dates being filtered out for simplicity. The `genre` column listed every
+genre that the game was tagged with in one long string. Using `", "` as
+a delimiter, I created separate columns for each individual genre a game
+had. The maximum number of genres that a game had was 13.
+
+Next, I summarized the number of games released in each year that had
+each discrete genre. I plotted this as a line plot, with a separate line
+for each genre, over time. Significantly more games were released in
+recent years than in the 80’s or 90’s, by several orders of magnitude.
+To make the plot easier to read, I plotted the number of games in each
+genre on a logarithmic y-axis.
+
+The code for the data analysis is shown below:
 
     # Research Question 4: What genre of games are the most popular to release and play over time?
 
@@ -446,6 +592,20 @@ for!
 
 ![](mini-project-2_files/figure-markdown_strict/Research_Q_4-1.png)
 
+Some genres were common since the 80’s and continue to be common now,
+like casual, action, and adventure. Other genres became more common
+later, like indie or web publishing. Some genres briefly occurred in the
+2010’s, like accounting, or HTC, though not a lot of games included
+them. There are 26 distinct genres listed in the data set, which makes
+this plot very messy to read. To determine overall trends, the plot
+should only take the most common few genres and plot those.
+
+The number of occurrences of each genre increased significantly by the
+2010’s, mainly because more games from the 2010’s were published on
+Steam compared to the 80’s and 90’s. The occurrences of genres decreased
+in the 2020’s because this data set seems to be a few years old, so
+fewer recent games were listed in the data set.
+
 <!----------------------------------------------------------------------------->
 
 ### 1.3 (2 points)
@@ -457,6 +617,85 @@ refined, now that you’ve investigated your data a bit more? Which
 research questions are yielding interesting results?
 
 <!------------------------- Write your answer here ---------------------------->
+
+#### Research Question 1: Why are so many of the discounted game prices higher than the non-discounted prices?
+
+Although I’ve been able to visualize how many games had higher
+discounted prices than the original price, and its trends over time and
+in relation to audience perception, the research question asks *why*
+this is. This is more difficult to determine, as there is no data
+available to determine if contemporary issues in the industry were a
+factor, or if these prices were listed as a mistake.
+
+It was very surprising to see that so many games had “discounted” prices
+listed in the hundreds, and the idea that these prices were mistaken is
+my best theory. It’s also unknown when the discounted prices were
+listed. If there were events happening during the time these games were
+discounted that would explain why the prices were so high, I wouldn’t
+have the information to determine it. The only way I could research this
+question further is if I had access to explanations from the people who
+determined the discounts.
+
+#### Research Question 2: How does the initial price of a game and its computer requirements affect its audience perception?
+
+I was surprised to see no apparent relationship between a game’s
+audience perception and its price and hardware requirements. The idea
+was that less expensive games that required less sophisticated computer
+hardware would be more easily accessible by players. This would make
+them more charitable to the games and give them better reviews. Another
+anticipated possibility was that, as advanced computer hardware cost a
+lot of money, the sunk cost in that, as well as a high game price would
+lead players to be more favorable towards expensive, demanding games,
+due to the sunk cost fallacy.
+
+There’s a possibility that, by simply counting the number of computer
+requirement categories that listed more advanced tech, I was “averaging
+out” the data too much. Certain aspects of a gaming setup are likely
+more important for players than others. What’s unclear is whether
+specific computer requirements might affect the audience’s perception of
+a game. Additionally, the plot I generated indicates that games with
+higher requirements were more expensive, so I’d also like to determine
+what specific requirements would make it expensive.
+
+#### Research Question 3: Have discounts applied to games affected how they are reviewed recently compared to overall?
+
+This question can be answered with a solid “no.” The plot indicated that
+regardless of the discounts given to games, recent reviews and overall
+reviews all reached the same consensus. The only significant pattern
+shown in the plot for Research Question 3 was also seen in the plots for
+the first project, where games viewed as overwhelmingly positive were
+not discounted as much as less beloved games. I am surprised at this
+conclusion, as I expected discounts to make players more favorable
+towards a game.
+
+Even if my hypothesis was right, one limitation of this analysis is that
+I don’t know when the discount was listed. The `recent_reviews` column
+summarized reviews from within one month of when the data set was
+created, but it’s unclear if the discounted price was set significantly
+before this period or during it. If the discount had been in place for a
+long time, then even if audiences were more favorable towards a cheaper
+game, it would have reflected in the overall reviews, and not the recent
+ones. To determine if this is the case, I would need data detailing when
+the game was discounted.
+
+#### Research Question 4: What genre of games are the most popular to release and play over time?
+
+To answer this question, I was able to determine 26 distinct genres of
+games. The line plot I made was a good visualization of the general
+trends of the popularity of genres over time. Several of the genres that
+I am familiar with are fairly popular, which I expected. There were also
+some genres that I had never heard of, which also don’t seem too
+popular. However, because of how many genres there were, the plot was
+borderline unreadable beyond its shape. To further research this
+questions, I will narrow down to a number of common genres and plot
+that.
+
+Also, I haven’t examined what genres are popular to play yet. I assume
+the distribution over the years will be similar to what genres are made,
+as game developers likely make games with the intention that people will
+like playing it. I can sort the data based on what genre and what review
+it got, and see if certain games are more popular than others over time.
+
 <!----------------------------------------------------------------------------->
 
 # Task 2: Tidy your data
@@ -477,6 +716,36 @@ untidy? Go through all your columns, or if you have &gt;8 variables,
 just pick 8, and explain whether the data is untidy or tidy.
 
 <!--------------------------- Start your work below --------------------------->
+
+    selected_data <- steam_games %>%
+      select(name, recent_reviews, all_reviews, release_date, 
+             developer, genre, original_price, discount_price)
+
+    selected_data
+
+    ## # A tibble: 40,833 × 8
+    ##    name   recent_reviews all_reviews release_date developer genre original_price
+    ##    <chr>  <chr>          <chr>       <chr>        <chr>     <chr>          <dbl>
+    ##  1 DOOM   Very Positive… Very Posit… May 12, 2016 id Softw… Acti…           20.0
+    ##  2 PLAYE… Mixed,(6,214)… Mixed,(836… Dec 21, 2017 PUBG Cor… Acti…           30.0
+    ##  3 BATTL… Mixed,(166),-… Mostly Pos… Apr 24, 2018 Harebrai… Acti…           40.0
+    ##  4 DayZ   Mixed,(932),-… Mixed,(167… Dec 13, 2018 Bohemia … Acti…           45.0
+    ##  5 EVE O… Mixed,(287),-… Mostly Pos… May 6, 2003  CCP       Acti…            0  
+    ##  6 Grand… NaN            NaN         NaN          Rockstar… Acti…           NA  
+    ##  7 Devil… Very Positive… Very Posit… Mar 7, 2019  CAPCOM C… Acti…           60.0
+    ##  8 Human… Very Positive… Very Posit… Jul 22, 2016 No Brake… Adve…           15.0
+    ##  9 They … Very Positive… Very Posit… Dec 12, 2017 Numantia… Stra…           30.0
+    ## 10 Warha… <NA>           Mixed,(904… May 31, 2019 Eko Soft… Acti…           50.0
+    ## # ℹ 40,823 more rows
+    ## # ℹ 1 more variable: discount_price <dbl>
+
+The columns `recent_reviews`, `all_reviews`, and `genre` are not tidy
+because they all have more than one value in each cell. `recent_reviews`
+and `all_reviews` have information on the overall rating of a game, the
+number of reviews it has, and the percentage of people who reviewed the
+game a certain way. The `genre` column contains a list of all the genres
+the game is tagged with.
+
 <!----------------------------------------------------------------------------->
 
 ### 2.2 (4 points)
@@ -491,6 +760,149 @@ Be sure to explain your reasoning for this task. Show us the “before”
 and “after”.
 
 <!--------------------------- Start your work below --------------------------->
+
+Since my data is untidy, I will tidy it by separating columns with
+strings of multiple values into multiple columns with individual values.
+First, I split the `genre` column into individual genres. Next, I split
+the `recent_reviews` and `all_reviews` columns into columns detailing
+the rating, number of reviews, and the percentage of positive reviews.
+Finally, I split the `release_date` column into its month, date, and
+year components. I also abbreviated the month so it’s uniformly 3
+letters in every row.
+
+The code tidying the data is shown below:
+
+    tidy_data <- selected_data %>%
+      # Split genre column into one column for each genre. 
+      separate_wider_delim(genre, delim = ",", names_sep = "_", 
+                           too_few = "align_start") %>%
+      
+      # Split recent reviews into rating & # of reviews, remove extra info
+      separate_wider_delim(recent_reviews, delim = ",", 
+                           names = c("recent_rating", "recent_reviews"),
+                           too_many = "merge", too_few = "align_start") %>%
+      separate_wider_delim(recent_reviews, delim = "(", 
+                           names = c("x", "recent_reviews"), 
+                           too_many = "merge", too_few = "align_start") %>%
+      separate_wider_delim(recent_reviews, delim = "),- ", 
+                           names = c("recent_reviews", "y"),
+                           too_many = "merge", too_few = "align_start") %>%
+      separate_wider_delim(y, delim = "%", names = c("recent_percent", "z"),
+                           too_many = "merge", too_few = "align_start") %>%
+      select(-x, -z) %>%
+      mutate(recent_reviews = as.numeric(gsub(",", "", recent_reviews))) %>%
+      # Remove NaN values in rating
+      mutate(recent_rating = if_else(grepl("NaN", recent_rating), 
+                                     NA, recent_rating)) %>%
+      # Same for all reviews
+      separate_wider_delim(all_reviews, delim = ",", names = c("all_rating",
+                                                               "all_reviews"),
+                           too_many = "merge", too_few = "align_start") %>%
+      separate_wider_delim(all_reviews, delim = "(", 
+                           names = c("x", "all_reviews"), 
+                           too_many = "merge", too_few = "align_start") %>%
+      separate_wider_delim(all_reviews, delim = "),- ", 
+                           names = c("all_reviews", "y"),
+                           too_many = "merge", too_few = "align_start") %>%
+      separate_wider_delim(y, delim = "%", names = c("all_percent", "z"),
+                           too_many = "merge", too_few = "align_start") %>%
+      select(-x, -z) %>%
+      mutate(all_reviews = suppressWarnings(as.numeric(gsub(",", "", all_reviews)))) %>%
+      # Format ratings where not enough people reviewed for a consensus.
+      mutate(all_rating = if_else(grepl("NaN", all_rating), NA, all_rating)) %>%
+      mutate(all_reviews = if_else(grepl("user", all_rating), 
+                                   suppressWarnings(as.numeric(all_rating[1])), 
+                                   all_reviews)) %>%
+      mutate(all_rating = if_else(grepl("user", all_rating), NA, all_rating)) %>%
+
+      # Format dates. Weirdly formatted dates may be deleted completely.
+      separate_wider_delim(release_date, delim = " ", names = c("m", "d", "y"),
+                           too_many = "merge", too_few = "align_end") %>%
+      # Determine if years were split into other columns.
+      mutate(y = if_else(grepl("^[0-9]+$", m), if_else(nchar(m) == 4, m, y), y)) %>%
+      mutate(y = if_else(grepl("^[0-9]+$", d), if_else(nchar(d) == 4, d, y), y)) %>%
+      # Determine if days were split into other columns.
+      mutate(d = gsub(",", "", d)) %>%
+      mutate(d = if_else(grepl("^[0-9]+$", y), if_else(nchar(y) != 4, y, d), d)) %>%
+      mutate(d = if_else(grepl("^[0-9]+$", m), if_else(nchar(m) != 4, m, d), d)) %>%
+      # Determine if months were split into other columns.
+      mutate(m = if_else(grepl("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec", d), 
+                         d, m)) %>%
+      mutate(m = if_else(grepl("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec", y), 
+                         y, m)) %>%
+      # Format year, month, date.
+      mutate(y = if_else(grepl("^[0-9]+$", y), if_else(nchar(y) == 4, y, NA), NA)) %>%
+      mutate(m = if_else(grepl("Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sept|Oct|Nov|Dec", m), 
+                         if_else(grepl(" ", m), NA, m), NA)[3]) %>%
+      mutate(d = if_else(grepl("^[0-9]+$", d), if_else(nchar(d) <= 2, d, NA), NA))
+
+    tidy_data
+
+    ## # A tibble: 40,833 × 27
+    ##    name       recent_rating recent_reviews recent_percent all_rating all_reviews
+    ##    <chr>      <chr>                  <dbl> <chr>          <chr>            <dbl>
+    ##  1 DOOM       Very Positive            554 89             Very Posi…       42550
+    ##  2 PLAYERUNK… Mixed                   6214 49             Mixed           836608
+    ##  3 BATTLETECH Mixed                    166 54             Mostly Po…        7030
+    ##  4 DayZ       Mixed                    932 57             Mixed           167115
+    ##  5 EVE Online Mixed                    287 54             Mostly Po…       11481
+    ##  6 Grand The… <NA>                      NA <NA>           <NA>                NA
+    ##  7 Devil May… Very Positive            408 87             Very Posi…        9645
+    ##  8 Human: Fa… Very Positive            629 91             Very Posi…       23763
+    ##  9 They Are … Very Positive            192 83             Very Posi…       12127
+    ## 10 Warhammer… <NA>                      NA <NA>           Mixed              904
+    ## # ℹ 40,823 more rows
+    ## # ℹ 21 more variables: all_percent <chr>, m <chr>, d <chr>, y <chr>,
+    ## #   developer <chr>, genre_1 <chr>, genre_2 <chr>, genre_3 <chr>,
+    ## #   genre_4 <chr>, genre_5 <chr>, genre_6 <chr>, genre_7 <chr>, genre_8 <chr>,
+    ## #   genre_9 <chr>, genre_10 <chr>, genre_11 <chr>, genre_12 <chr>,
+    ## #   genre_13 <chr>, genre_14 <chr>, original_price <dbl>, discount_price <dbl>
+
+To untidy the data, I combined the `m`, `d`, and `y` columns back into
+`Release Date`, now formatted more uniformly. I also combined the stats
+for `recent_reviews` and `all_reviews` back into a singular string in
+their respective columns. Finally, I combined all the genre columns back
+into one.
+
+The code untidying the data is shown below:
+
+    untidy_data <- tidy_data %>%
+      # Convert m, d, and y columns into one date
+      unite("Release Date", m:y, sep = "-", na.rm = TRUE) %>%
+      
+      # Combine recent review info
+      unite(recent_reviews, c(recent_reviews, recent_rating), 
+            sep = " Reviews; Average Rating: ", na.rm = TRUE) %>%
+      unite("Recent Reviews", c(recent_reviews, recent_percent),
+            sep = "; % Positive:", na.rm = TRUE) %>%
+      
+      # Combine all review info
+      unite(all_reviews, c(all_reviews, all_rating),
+            sep = " Reviews, Average Rating: ", na.rm = TRUE) %>%
+      unite("All Reviews", c(all_reviews, all_percent),
+            sep = "; % Positive:", na.rm = TRUE) %>%
+      
+      # Combine genre back into 1 column
+      unite("Genres", genre_1:genre_14, sep = ", ", na.rm = TRUE)
+
+    untidy_data
+
+    ## # A tibble: 40,833 × 8
+    ##    name           `Recent Reviews` `All Reviews` `Release Date` developer Genres
+    ##    <chr>          <chr>            <chr>         <chr>          <chr>     <chr> 
+    ##  1 DOOM           "554 Reviews; A… "42550 Revie… Apr-12-2016    id Softw… Action
+    ##  2 PLAYERUNKNOWN… "6214 Reviews; … "836608 Revi… Apr-21-2017    PUBG Cor… Actio…
+    ##  3 BATTLETECH     "166 Reviews; A… "7030 Review… Apr-24-2018    Harebrai… Actio…
+    ##  4 DayZ           "932 Reviews; A… "167115 Revi… Apr-13-2018    Bohemia … Actio…
+    ##  5 EVE Online     "287 Reviews; A… "11481 Revie… Apr-6-2003     CCP       Actio…
+    ##  6 Grand Theft A… ""               ""            Apr            Rockstar… Actio…
+    ##  7 Devil May Cry… "408 Reviews; A… "9645 Review… Apr-7-2019     CAPCOM C… Action
+    ##  8 Human: Fall F… "629 Reviews; A… "23763 Revie… Apr-22-2016    No Brake… Adven…
+    ##  9 They Are Bill… "192 Reviews; A… "12127 Revie… Apr-12-2017    Numantia… Strat…
+    ## 10 Warhammer: Ch… ""               "904 Reviews… Apr-31-2019    Eko Soft… Actio…
+    ## # ℹ 40,823 more rows
+    ## # ℹ 2 more variables: original_price <dbl>, discount_price <dbl>
+
 <!----------------------------------------------------------------------------->
 
 ### 2.3 (4 points)
@@ -502,25 +914,160 @@ analysis in the remaining tasks:
 
 <!-------------------------- Start your work below ---------------------------->
 
-1.  *FILL\_THIS\_IN*
-2.  *FILL\_THIS\_IN*
+1.  How does the initial price of a game and its computer requirements
+    affect its audience perception?
+2.  What genre of games are the most popular to release and play over
+    time?
 
 <!----------------------------------------------------------------------------->
 
 Explain your decision for choosing the above two research questions.
 
 <!--------------------------- Start your work below --------------------------->
+
+I chose the first question because I still wanted to look into if
+specific computer requirements would affect audience perception. I have
+concluded that the initial price of a game has no clear connection to
+audience perception, so I will only look at specific computer
+requirements.
+
+I chose the second question because I haven’t looked into what genres of
+games are popular to play, only what genres are popular to release.
+Moreover, I want to narrow it down to a few common genres, and disregard
+the less common ones that are only applicable to a few games.
+
 <!----------------------------------------------------------------------------->
 
 Now, try to choose a version of your data that you think will be
 appropriate to answer these 2 questions. Use between 4 and 8 functions
-that we’ve covered so far (i.e. by filtering, cleaning, tidy’ing,
+that we’ve covered so far (i.e. by filtering, cleaning, tidying,
 dropping irrelevant columns, etc.).
 
 (If it makes more sense, then you can make/pick two versions of your
 data, one for each research question.)
 
 <!--------------------------- Start your work below --------------------------->
+
+The data set I made for New Research Question 1 summarizes how many
+games in each review rating category requires the most sophisticated
+hardware in each computer requirement category. The occurrences of games
+can be plotted to determine if certain computer requirements affect
+reviews over others.
+
+    nq1_data <- q2_data %>%
+      # Select only the reviews and requirement categories of data.
+      ungroup() %>%
+      select(-original_price, -`# Requirements`, -Requirements)
+
+    # List of categories and qualifiers to cycle through in for loop
+    category_list = list("Recommended", "OS", "Processor", "Memory", "Graphics",
+                         "Storage", "DirectX", "Network", "Sound Card")
+    high_reqs <- list("64-bit processor", "Windows 7", "i7", "16 GB", "GeForce", 
+                      "100 GB", "Version 11", "Broadband", "DirectX")
+    new_col_name <- list("64-Bit Processor", "Windows 7", "Intel i7 Processor", 
+                         "16 GB Memory", "NVIDIA GeForce Graphics", "File Over 100 GB",
+                         "DirectX Version 11", "Internet Connection",
+                         "DirectX Sound Card")
+
+    # Make new columns just checking for the highest requirements
+    for(i in 1:length(category_list)){
+      col_name <- toString(category_list[i])
+      
+      # Check for requirement and create new column of if it meets requirement.
+      nq1_data <- nq1_data %>%
+        mutate(!!new_col_name[[i]] := if_else(grepl(!!high_reqs[i], get(col_name)),
+                                              TRUE, FALSE))
+    }
+
+    nq1_data <- nq1_data %>%
+      # Remove original requirement columns and group by review rating
+      select(-Recommended, -OS, -Processor, -Memory, -Graphics, 
+             -Storage, -DirectX, -Network, -`Sound Card`) %>%
+      
+      # Make each requirement into its own row
+      pivot_longer(cols = `64-Bit Processor`:`DirectX Sound Card`, 
+                   names_to = "Requirement", values_to = "Y/N") %>%
+      # Only include rows that list something that's required
+      filter(`Y/N` == TRUE) %>%
+      select(-`Y/N`) %>%
+      
+      # Summarize requirements
+      group_by(all_reviews, Requirement) %>%
+      summarise("Occurrences" = n())
+
+    ## `summarise()` has grouped output by 'all_reviews'. You can override using the
+    ## `.groups` argument.
+
+    nq1_data
+
+    ## # A tibble: 73 × 3
+    ## # Groups:   all_reviews [9]
+    ##    all_reviews             Requirement             Occurrences
+    ##    <fct>                   <chr>                         <int>
+    ##  1 Overwhelmingly Positive 16 GB Memory                      3
+    ##  2 Overwhelmingly Positive 64-Bit Processor                 19
+    ##  3 Overwhelmingly Positive DirectX Sound Card               16
+    ##  4 Overwhelmingly Positive DirectX Version 11               28
+    ##  5 Overwhelmingly Positive Intel i7 Processor               14
+    ##  6 Overwhelmingly Positive Internet Connection              17
+    ##  7 Overwhelmingly Positive NVIDIA GeForce Graphics          50
+    ##  8 Overwhelmingly Positive Windows 7                        27
+    ##  9 Very Positive           16 GB Memory                    101
+    ## 10 Very Positive           64-Bit Processor                401
+    ## # ℹ 63 more rows
+
+The data set I made groups games by their year of release, audience
+rating, and what genre they have. I summarized the occurrence of games
+in each category, as well as the number of positive reviews that the
+average game in that category received. This can be plotted to determine
+what genres are the most popular with audiences in each year.
+
+    nq2_data <- tidy_data %>%
+      # Remove uneccesary columns
+      select(-recent_rating, -recent_reviews, -recent_percent, 
+             -m, -d, -developer, -original_price, -discount_price) %>%
+      
+      # Remove columns that don't have years, review percentages, or any genres
+      filter(!is.na(y)) %>%
+      filter(!is.na(all_percent)) %>%
+      filter(!is.na(genre_1)) %>%
+      
+      # Determine how many positive reviews each game had
+      mutate(pos_reviews = as.numeric(all_percent) * as.numeric(all_reviews) / 100) %>%
+      select(-all_percent, -all_reviews) %>%
+      
+      # Make one row for each occurrence of a genre
+      pivot_longer(cols = starts_with("genre"), names_to = "temp", values_to = "genre",
+                   values_drop_na = TRUE) %>%
+      select(-temp) %>%
+      
+      # Summarize how much each genre occurs in each year
+      group_by(y, genre, all_rating) %>%
+      summarise("Occurrences" = n(), 
+                "Positive Reviews" = mean(pos_reviews))
+
+    ## `summarise()` has grouped output by 'y', 'genre'. You can override using the
+    ## `.groups` argument.
+
+    nq2_data
+
+    ## # A tibble: 1,600 × 5
+    ## # Groups:   y, genre [396]
+    ##    y     genre     all_rating      Occurrences `Positive Reviews`
+    ##    <chr> <chr>     <chr>                 <int>              <dbl>
+    ##  1 1983  Action    Mostly Positive           1              289. 
+    ##  2 1983  Adventure Mostly Positive           1              289. 
+    ##  3 1983  Casual    Mostly Positive           1              289. 
+    ##  4 1984  Action    Very Positive             1               72.7
+    ##  5 1984  Adventure Very Positive             1               72.7
+    ##  6 1984  Casual    Positive                  1               16.9
+    ##  7 1984  Casual    Very Positive             1               72.7
+    ##  8 1984  Indie     Positive                  1               16.9
+    ##  9 1986  Adventure Mixed                     1               17.9
+    ## 10 1986  Casual    Mixed                     1               17.9
+    ## # ℹ 1,590 more rows
+
+<!----------------------------------------------------------------------------->
 
 # Task 3: Modelling
 
@@ -532,9 +1079,10 @@ these.
 
 <!-------------------------- Start your work below ---------------------------->
 
-**Research Question**: FILL\_THIS\_IN
+**Research Question**: How does the initial price of a game and its
+computer requirements affect its audience perception?
 
-**Variable of interest**: FILL\_THIS\_IN
+**Variable of interest**: Median initial price of a game
 
 <!----------------------------------------------------------------------------->
 
@@ -561,6 +1109,49 @@ specifics in STAT 545.
         coefficients.
 
 <!-------------------------- Start your work below ---------------------------->
+
+This model will determine the relationship between the initial price of
+a game compared to how many high computer requirements it has. The
+number of high computer requirements is on a scale from 1-9. There were
+some games that had absurdly high prices, up to $600. To determine the
+average initial price of a game, I grouped the data by games’ number of
+high computer requirements and took the median price of each group.
+
+    # x is # of requirements, y is initial game price
+    linear_model <- q2_data %>%
+      # Remove uneccesary columns
+      ungroup() %>%
+      select(original_price, `# Requirements`) %>%
+      
+      # Get medians of game prices
+      group_by(`# Requirements`) %>%
+      summarise(average_price = median(original_price)) %>%
+      
+      # Linear model
+      lm(average_price~`# Requirements`, data = .) %>%
+      summary()
+
+    linear_model
+
+    ## 
+    ## Call:
+    ## lm(formula = average_price ~ `# Requirements`, data = .)
+    ## 
+    ## Residuals:
+    ##      Min       1Q   Median       3Q      Max 
+    ## -11.1331  -7.0011  -0.8691   7.7349  13.3009 
+    ## 
+    ## Coefficients:
+    ##                  Estimate Std. Error t value Pr(>|t|)   
+    ## (Intercept)        -2.273      5.761  -0.395  0.70492   
+    ## `# Requirements`    5.566      1.210   4.600  0.00248 **
+    ## ---
+    ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+    ## 
+    ## Residual standard error: 9.373 on 7 degrees of freedom
+    ## Multiple R-squared:  0.7514, Adjusted R-squared:  0.7159 
+    ## F-statistic: 21.16 on 1 and 7 DF,  p-value: 0.002484
+
 <!----------------------------------------------------------------------------->
 
 ## 3.2 (3 points)
@@ -578,6 +1169,24 @@ Y, or a single value like a regression coefficient or a p-value.
     which broom function is not compatible.
 
 <!-------------------------- Start your work below ---------------------------->
+
+I used the glance function to produce a tibble row of various statistics
+regarding the fit for the linear model between the median initial price
+of games and the number of high computer requirements they require. The
+statistics include: the regular and adjusted *R*<sup>2</sup>, the
+standard error, the test statistic, its p-value, the normal and residual
+degrees of freedom, and the number of observations used.
+
+    # Make a tibble of linear model fit statistics.
+    broom_model <- glance(linear_model)
+
+    broom_model
+
+    ## # A tibble: 1 × 8
+    ##   r.squared adj.r.squared sigma statistic p.value    df df.residual  nobs
+    ##       <dbl>         <dbl> <dbl>     <dbl>   <dbl> <dbl>       <int> <dbl>
+    ## 1     0.751         0.716  9.37      21.2 0.00248     1           7     9
+
 <!----------------------------------------------------------------------------->
 
 # Task 4: Reading and writing data
@@ -599,6 +1208,12 @@ file in your `output` folder. Use the `here::here()` function.
     file, and remake it simply by knitting this Rmd file.
 
 <!-------------------------- Start your work below ---------------------------->
+
+    write.csv(q4_data,file=here::here("output","q4_data.csv"), row.names=FALSE)
+    here::here("q4_data.csv")
+
+    ## [1] "C:/Users/jessi/OneDrive/Desktop/Important Stuff/Schoolwork/STAT 545/mini-data-analysis-Jessica-Sun/q4_data.csv"
+
 <!----------------------------------------------------------------------------->
 
 ## 4.2 (3 points)
@@ -611,6 +1226,15 @@ Use the functions `saveRDS()` and `readRDS()`.
     here.
 
 <!-------------------------- Start your work below ---------------------------->
+
+    saveRDS(broom_model, "output/Broom_Model.rds")
+    readRDS("output/Broom_Model.rds")
+
+    ## # A tibble: 1 × 8
+    ##   r.squared adj.r.squared sigma statistic p.value    df df.residual  nobs
+    ##       <dbl>         <dbl> <dbl>     <dbl>   <dbl> <dbl>       <int> <dbl>
+    ## 1     0.751         0.716  9.37      21.2 0.00248     1           7     9
+
 <!----------------------------------------------------------------------------->
 
 # Overall Reproducibility/Cleanliness/Coherence Checklist

@@ -1,0 +1,437 @@
+"release_year","Genre","n"
+1983,"Action",1
+1983,"Adventure",1
+1983,"Casual",1
+1984,"Action",1
+1984,"Adventure",1
+1984,"Casual",2
+1984,"Indie",1
+1985,"Simulation",1
+1986,"Adventure",1
+1986,"Casual",1
+1986,"Indie",1
+1986,"RPG",1
+1986,"Simulation",1
+1987,"Adventure",3
+1987,"Simulation",2
+1988,"Action",1
+1988,"Adventure",3
+1988,"Indie",1
+1988,"RPG",1
+1988,"Simulation",1
+1988,"Strategy",2
+1989,"Action",1
+1989,"Adventure",3
+1989,"RPG",1
+1989,"Simulation",2
+1990,"Action",2
+1990,"Adventure",4
+1990,"RPG",1
+1990,"Simulation",4
+1990,"Strategy",1
+1991,"Action",4
+1991,"Adventure",5
+1991,"Casual",1
+1991,"RPG",1
+1991,"Simulation",1
+1991,"Strategy",3
+1992,"Action",3
+1992,"Adventure",4
+1992,"Casual",1
+1992,"Indie",1
+1992,"RPG",2
+1992,"Simulation",2
+1992,"Strategy",2
+1993,"Action",9
+1993,"Adventure",12
+1993,"Casual",2
+1993,"RPG",2
+1993,"Simulation",3
+1993,"Strategy",3
+1994,"Action",14
+1994,"Adventure",12
+1994,"Casual",2
+1994,"Indie",1
+1994,"RPG",1
+1994,"Racing",1
+1994,"Simulation",6
+1994,"Strategy",3
+1995,"Action",13
+1995,"Adventure",10
+1995,"Casual",5
+1995,"Indie",1
+1995,"RPG",2
+1995,"Racing",2
+1995,"Simulation",3
+1995,"Sports",2
+1995,"Strategy",7
+1996,"Action",14
+1996,"Adventure",17
+1996,"Casual",7
+1996,"Free to Play",2
+1996,"Indie",4
+1996,"Massively Multiplayer",1
+1996,"RPG",3
+1996,"Racing",2
+1996,"Simulation",4
+1996,"Strategy",5
+1997,"Action",15
+1997,"Adventure",15
+1997,"Casual",8
+1997,"Indie",5
+1997,"RPG",5
+1997,"Racing",1
+1997,"Simulation",2
+1997,"Strategy",7
+1998,"Action",20
+1998,"Adventure",12
+1998,"Casual",8
+1998,"Indie",4
+1998,"RPG",3
+1998,"Racing",2
+1998,"Simulation",6
+1998,"Strategy",9
+1999,"Action",26
+1999,"Adventure",9
+1999,"Casual",4
+1999,"Early Access",1
+1999,"Indie",2
+1999,"Massively Multiplayer",1
+1999,"RPG",10
+1999,"Racing",4
+1999,"Simulation",8
+1999,"Sports",3
+1999,"Strategy",16
+2000,"Action",20
+2000,"Adventure",10
+2000,"Casual",4
+2000,"Indie",2
+2000,"RPG",6
+2000,"Racing",1
+2000,"Simulation",6
+2000,"Strategy",9
+2001,"Action",21
+2001,"Adventure",14
+2001,"Casual",7
+2001,"Free to Play",3
+2001,"Indie",6
+2001,"Massively Multiplayer",2
+2001,"RPG",9
+2001,"Simulation",11
+2001,"Strategy",18
+2002,"Action",20
+2002,"Adventure",7
+2002,"Casual",5
+2002,"Indie",4
+2002,"RPG",5
+2002,"Simulation",6
+2002,"Sports",1
+2002,"Strategy",18
+2003,"Action",34
+2003,"Adventure",22
+2003,"Casual",5
+2003,"Free to Play",3
+2003,"Indie",10
+2003,"Massively Multiplayer",2
+2003,"RPG",12
+2003,"Racing",1
+2003,"Simulation",4
+2003,"Strategy",27
+2004,"Action",28
+2004,"Adventure",12
+2004,"Casual",9
+2004,"Free to Play",1
+2004,"Indie",7
+2004,"RPG",6
+2004,"Racing",1
+2004,"Simulation",9
+2004,"Strategy",21
+2005,"Action",36
+2005,"Adventure",16
+2005,"Casual",12
+2005,"Free to Play",3
+2005,"Indie",11
+2005,"Massively Multiplayer",2
+2005,"RPG",16
+2005,"Racing",5
+2005,"Simulation",11
+2005,"Sports",4
+2005,"Strategy",24
+2005,"Web Publishing",1
+2006,"Action",30
+2006,"Adventure",18
+2006,"Casual",26
+2006,"Free to Play",3
+2006,"Indie",17
+2006,"Massively Multiplayer",3
+2006,"Photo Editing",1
+2006,"RPG",9
+2006,"Racing",7
+2006,"Simulation",16
+2006,"Strategy",43
+2006,"Utilities",1
+2006,"Video Production",1
+2007,"Action",45
+2007,"Adventure",24
+2007,"Audio Production",1
+2007,"Casual",33
+2007,"Free to Play",8
+2007,"Indie",30
+2007,"Massively Multiplayer",3
+2007,"RPG",17
+2007,"Racing",6
+2007,"Simulation",19
+2007,"Strategy",31
+2008,"Action",42
+2008,"Adventure",43
+2008,"Casual",43
+2008,"Free to Play",6
+2008,"Indie",44
+2008,"Massively Multiplayer",6
+2008,"RPG",24
+2008,"Racing",12
+2008,"Simulation",21
+2008,"Sports",4
+2008,"Strategy",29
+2008,"Web Publishing",1
+2009,"Action",72
+2009,"Adventure",42
+2009,"Animation & Modeling",1
+2009,"Casual",52
+2009,"Free to Play",4
+2009,"Game Development",1
+2009,"Indie",59
+2009,"Massively Multiplayer",4
+2009,"RPG",32
+2009,"Racing",9
+2009,"Simulation",60
+2009,"Sports",6
+2009,"Strategy",65
+2009,"Utilities",1
+2010,"Action",119
+2010,"Adventure",73
+2010,"Casual",56
+2010,"Education",2
+2010,"Free to Play",7
+2010,"Indie",92
+2010,"Massively Multiplayer",2
+2010,"RPG",44
+2010,"Racing",10
+2010,"Simulation",48
+2010,"Software Training",1
+2010,"Sports",3
+2010,"Strategy",84
+2011,"Action",165
+2011,"Adventure",77
+2011,"Casual",81
+2011,"Free to Play",9
+2011,"Indie",154
+2011,"Massively Multiplayer",8
+2011,"RPG",72
+2011,"Racing",14
+2011,"Simulation",65
+2011,"Sports",9
+2011,"Strategy",131
+2012,"Action",268
+2012,"Adventure",145
+2012,"Animation & Modeling",2
+2012,"Casual",153
+2012,"Design & Illustration",1
+2012,"Early Access",1
+2012,"Free to Play",32
+2012,"Indie",232
+2012,"Massively Multiplayer",17
+2012,"RPG",92
+2012,"Racing",22
+2012,"Simulation",153
+2012,"Sports",5
+2012,"Strategy",179
+2012,"Utilities",1
+2012,"Web Publishing",1
+2013,"Action",417
+2013,"Adventure",231
+2013,"Animation & Modeling",4
+2013,"Audio Production",4
+2013,"Casual",174
+2013,"Design & Illustration",16
+2013,"Early Access",4
+2013,"Education",5
+2013,"Free to Play",53
+2013,"Indie",345
+2013,"Massively Multiplayer",25
+2013,"RPG",154
+2013,"Racing",30
+2013,"Simulation",222
+2013,"Software Training",4
+2013,"Sports",20
+2013,"Strategy",277
+2013,"Utilities",9
+2013,"Video Production",3
+2013,"Web Publishing",15
+2014,"Action",706
+2014,"Adventure",490
+2014,"Animation & Modeling",14
+2014,"Audio Production",4
+2014,"Casual",494
+2014,"Design & Illustration",40
+2014,"Early Access",46
+2014,"Education",10
+2014,"Free to Play",109
+2014,"Game Development",1
+2014,"Indie",984
+2014,"Massively Multiplayer",58
+2014,"Photo Editing",3
+2014,"RPG",415
+2014,"Racing",63
+2014,"Simulation",462
+2014,"Software Training",11
+2014,"Sports",67
+2014,"Strategy",417
+2014,"Utilities",22
+2014,"Video Production",6
+2014,"Web Publishing",26
+2015,"Action",1364
+2015,"Adventure",1035
+2015,"Animation & Modeling",24
+2015,"Audio Production",7
+2015,"Casual",845
+2015,"Design & Illustration",58
+2015,"Early Access",128
+2015,"Education",10
+2015,"Free to Play",194
+2015,"Game Development",3
+2015,"Indie",1900
+2015,"Massively Multiplayer",94
+2015,"Photo Editing",20
+2015,"RPG",654
+2015,"Racing",121
+2015,"Simulation",827
+2015,"Software Training",21
+2015,"Sports",111
+2015,"Strategy",676
+2015,"Utilities",52
+2015,"Valve",1
+2015,"Video Production",16
+2015,"Web Publishing",24
+2016,"Accounting",1
+2016,"Action",2038
+2016,"Adventure",1662
+2016,"Animation & Modeling",40
+2016,"Audio Production",18
+2016,"Casual",1687
+2016,"Design & Illustration",96
+2016,"Early Access",329
+2016,"Education",30
+2016,"Free to Play",339
+2016,"Game Development",2
+2016,"HTC",1
+2016,"Indie",3253
+2016,"Massively Multiplayer",185
+2016,"Photo Editing",11
+2016,"RPG",903
+2016,"Racing",207
+2016,"Simulation",1364
+2016,"Software Training",13
+2016,"Sports",274
+2016,"Strategy",1163
+2016,"Utilities",73
+2016,"Valve",1
+2016,"Video Production",20
+2016,"Web Publishing",49
+2017,"Accounting",2
+2017,"Action",2936
+2017,"Adventure",2424
+2017,"Animation & Modeling",52
+2017,"Audio Production",26
+2017,"Casual",2491
+2017,"Design & Illustration",115
+2017,"Early Access",551
+2017,"Education",46
+2017,"Free to Play",526
+2017,"Game Development",10
+2017,"Indie",4629
+2017,"Massively Multiplayer",237
+2017,"Movie",1
+2017,"Photo Editing",15
+2017,"RPG",1246
+2017,"Racing",264
+2017,"Simulation",1726
+2017,"Software Training",23
+2017,"Sports",450
+2017,"Strategy",1514
+2017,"Utilities",84
+2017,"Video Production",33
+2017,"Web Publishing",60
+2018,"Accounting",4
+2018,"Action",3879
+2018,"Adventure",3051
+2018,"Animation & Modeling",77
+2018,"Audio Production",48
+2018,"Casual",3656
+2018,"Design & Illustration",226
+2018,"Early Access",855
+2018,"Education",43
+2018,"Free to Play",752
+2018,"Game Development",26
+2018,"Indie",6535
+2018,"Massively Multiplayer",379
+2018,"Photo Editing",12
+2018,"RPG",1820
+2018,"Racing",372
+2018,"Simulation",2185
+2018,"Software Training",23
+2018,"Sports",469
+2018,"Strategy",1855
+2018,"Utilities",139
+2018,"Video Production",58
+2018,"Web Publishing",188
+2019,"Accounting",1
+2019,"Action",1974
+2019,"Adventure",1519
+2019,"Animation & Modeling",24
+2019,"Audio Production",17
+2019,"Casual",1724
+2019,"Design & Illustration",68
+2019,"Early Access",618
+2019,"Education",21
+2019,"Free to Play",453
+2019,"Game Development",21
+2019,"Indie",3083
+2019,"Massively Multiplayer",156
+2019,"Photo Editing",5
+2019,"RPG",959
+2019,"Racing",164
+2019,"Simulation",1066
+2019,"Software Training",13
+2019,"Sports",237
+2019,"Strategy",903
+2019,"Utilities",63
+2019,"Video Production",13
+2019,"Web Publishing",55
+2020,"Action",11
+2020,"Adventure",10
+2020,"Casual",3
+2020,"Early Access",4
+2020,"Free to Play",4
+2020,"Indie",14
+2020,"RPG",8
+2020,"Simulation",7
+2020,"Strategy",7
+2021,"Action",1
+2021,"Indie",1
+2021,"RPG",1
+2022,"Action",2
+2022,"Adventure",1
+2022,"Casual",1
+2022,"Indie",3
+2022,"Massively Multiplayer",1
+2022,"RPG",1
+2023,"Action",1
+2023,"Adventure",1
+2023,"Casual",1
+2023,"Indie",1
+2025,"Action",1
+2025,"Adventure",1
+2025,"Early Access",1
+2025,"Indie",1
+2025,"RPG",1
